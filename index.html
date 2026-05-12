@@ -7,7 +7,7 @@
 	<meta name="description" content="FartCat est un memecoin fun, rapide et communautaire. Miaou + chaos + vibes." />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Syne:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 	<link rel="stylesheet" href="index.css" />
 </head>
 <body>
@@ -74,11 +74,22 @@
 
 		<section class="ticker" aria-label="Nouvelles du marche">
 			<div class="ticker-track" id="tickerTrack">
-				<span>FARTCAT +420% de vibes</span>
-				<span>La communaute miaule sur X</span>
-				<span>Pas de taxe, full chaos</span>
-				<span>Roadmap: Moon, Mars, Beyond</span>
-				<span>FARTCAT +420% de vibes</span>
+				<span>FARTCAT +420% DE VIBES</span>
+				<span>///</span>
+				<span>LA COMMUNAUTE MIAULE SUR X</span>
+				<span>///</span>
+				<span>PAS DE TAXE — FULL CHAOS</span>
+				<span>///</span>
+				<span>ROADMAP: MOON, MARS, BEYOND</span>
+				<span>///</span>
+				<span>FARTCAT +420% DE VIBES</span>
+				<span>///</span>
+				<span>LA COMMUNAUTE MIAULE SUR X</span>
+				<span>///</span>
+				<span>PAS DE TAXE — FULL CHAOS</span>
+				<span>///</span>
+				<span>ROADMAP: MOON, MARS, BEYOND</span>
+				<span>///</span>
 			</div>
 		</section>
 
@@ -156,6 +167,42 @@
 			<p>2026 FartCat. Meme first, utility maybe later.</p>
 		</div>
 	</footer>
+
+	<!-- AI Terminal -->
+	<div class="ai-terminal" id="aiTerminal" aria-hidden="true">
+		<div class="ai-term-header">
+			<span class="ai-term-title">
+				<span class="ai-term-dot red"></span>
+				<span class="ai-term-dot yellow"></span>
+				<span class="ai-term-dot green"></span>
+				FARTCAT-BOT v1.0
+			</span>
+			<button class="ai-term-close" id="aiTermClose" aria-label="Fermer">✕</button>
+		</div>
+		<div class="ai-term-body" id="aiTermBody">
+			<div class="ai-term-msg ai-term-bot">
+				<span class="ai-term-prompt">FARTCAT-BOT&gt;</span>
+				<span>gm anon 🐈💨 Tu veux savoir quoi sur FartCat ? Je suis ton chat le plus degen de la blockchain.</span>
+			</div>
+		</div>
+		<form class="ai-term-form" id="aiTermForm" autocomplete="off">
+			<span class="ai-term-caret">›</span>
+			<input
+				class="ai-term-input"
+				id="aiTermInput"
+				type="text"
+				placeholder="tape ta question, ser..."
+				maxlength="300"
+				aria-label="Message pour FARTCAT-BOT"
+			/>
+			<button class="ai-term-send" type="submit" aria-label="Envoyer">⏎</button>
+		</form>
+	</div>
+
+	<button class="ai-fab" id="aiFab" aria-label="Ouvrir le chat FARTCAT-BOT" aria-expanded="false">
+		<span class="ai-fab-icon">🐈💨</span>
+		<span class="ai-fab-label">AI Chat</span>
+	</button>
 
 	<script src="script.js"></script>
 </body>
