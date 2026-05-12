@@ -303,15 +303,15 @@ body {
 }
 
 @keyframes phase2Shake {
-	0% { transform: translate(0, 0) scale(1); }
-	12% { transform: translate(-8px, 6px) scale(0.998); }
-	24% { transform: translate(10px, -7px) scale(1.002); }
-	36% { transform: translate(-5px, 8px) scale(0.999); }
-	48% { transform: translate(7px, -5px) scale(1.001); }
-	60% { transform: translate(-3px, 4px) scale(1); }
-	72% { transform: translate(2px, -2px) scale(1); }
-	84% { transform: translate(-1px, 1px) scale(1); }
-	100% { transform: translate(0, 0) scale(1); }
+	0% { transform: translate(0, 0); }
+	12% { transform: translate(-8px, 6px); }
+	24% { transform: translate(10px, -7px); }
+	36% { transform: translate(-5px, 8px); }
+	48% { transform: translate(7px, -5px); }
+	60% { transform: translate(-3px, 4px); }
+	72% { transform: translate(2px, -2px); }
+	84% { transform: translate(-1px, 1px); }
+	100% { transform: translate(0, 0); }
 }
 
 .container {
