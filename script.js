@@ -20,6 +20,8 @@ let price = null;
 let marketCap = null;
 let holders = null;
 let volume = null;
+let fartAudioContext = null;
+let fartSpeedResetTimer = null;
 
 function pickBestPair(pairs = []) {
   return pairs.reduce((best, pair) => {
@@ -44,43 +46,148 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+function buildFartParticle({ fast = false } = {}) {
+  const particle = document.createElement("img");
+  particle.className = "fart-particle";
+  particle.src = "fart.png";
+  particle.alt = "";
+
+  const size = fast ? randomBetween(32, 72) : randomBetween(28, 64);
+  const duration = fast ? randomBetween(4.5, 10.5) : randomBetween(12, 28);
+  const startX = randomBetween(-10, 110);
+  const startY = randomBetween(-10, 110);
+  const midX = randomBetween(-15, 115);
+  const midY = randomBetween(-15, 115);
+  const endX = randomBetween(-10, 110);
+  const endY = randomBetween(-10, 110);
+
+  particle.dataset.baseDuration = duration.toFixed(2);
+  particle.style.setProperty("--size", `${size}px`);
+  particle.style.setProperty("--scale", randomBetween(0.7, fast ? 1.35 : 1.2).toFixed(2));
+  particle.style.setProperty("--duration", `${duration.toFixed(2)}s`);
+  particle.style.setProperty("--x0", `${startX}vw`);
+  particle.style.setProperty("--y0", `${startY}vh`);
+  particle.style.setProperty("--x1", `${midX}vw`);
+  particle.style.setProperty("--y1", `${midY}vh`);
+  particle.style.setProperty("--x2", `${endX}vw`);
+  particle.style.setProperty("--y2", `${endY}vh`);
+  particle.style.setProperty("--rot1", `${randomBetween(-180, 180).toFixed(0)}deg`);
+  particle.style.setProperty("--rot2", `${randomBetween(-360, 360).toFixed(0)}deg`);
+  particle.style.animationDelay = `${randomBetween(-28, 0).toFixed(2)}s`;
+  particle.style.opacity = String(randomBetween(0.35, fast ? 1 : 0.9));
+
+  return particle;
+}
+
+function addFartParticles(count, options = {}) {
+  if (!fartParticlesEl) return;
+
+  const maxParticles = options.maxParticles ?? 160;
+  for (let index = 0; index < count; index += 1) {
+    while (fartParticlesEl.childElementCount >= maxParticles) {
+      fartParticlesEl.removeChild(fartParticlesEl.firstElementChild);
+    }
+
+    fartParticlesEl.appendChild(buildFartParticle(options));
+  }
+}
+
 function createFartParticles() {
   if (!fartParticlesEl) return;
 
-  const count = 18;
-  const particleSource = "fart.png";
   fartParticlesEl.innerHTML = "";
+  addFartParticles(18);
+}
 
-  for (let index = 0; index < count; index += 1) {
-    const particle = document.createElement("img");
-    particle.className = "fart-particle";
-    particle.src = particleSource;
-    particle.alt = "";
+function boostFartParticles(multiplier = 0.6, duration = 2200) {
+  if (!fartParticlesEl) return;
 
-    const size = randomBetween(28, 64);
-    const startX = randomBetween(-10, 110);
-    const startY = randomBetween(-10, 110);
-    const midX = randomBetween(-15, 115);
-    const midY = randomBetween(-15, 115);
-    const endX = randomBetween(-10, 110);
-    const endY = randomBetween(-10, 110);
+  window.clearTimeout(fartSpeedResetTimer);
 
-    particle.style.setProperty("--size", `${size}px`);
-    particle.style.setProperty("--scale", randomBetween(0.7, 1.2).toFixed(2));
-    particle.style.setProperty("--duration", `${randomBetween(12, 28).toFixed(2)}s`);
-    particle.style.setProperty("--x0", `${startX}vw`);
-    particle.style.setProperty("--y0", `${startY}vh`);
-    particle.style.setProperty("--x1", `${midX}vw`);
-    particle.style.setProperty("--y1", `${midY}vh`);
-    particle.style.setProperty("--x2", `${endX}vw`);
-    particle.style.setProperty("--y2", `${endY}vh`);
-    particle.style.setProperty("--rot1", `${randomBetween(-180, 180).toFixed(0)}deg`);
-    particle.style.setProperty("--rot2", `${randomBetween(-360, 360).toFixed(0)}deg`);
-    particle.style.animationDelay = `${randomBetween(-28, 0).toFixed(2)}s`;
-    particle.style.opacity = String(randomBetween(0.35, 0.9));
+  fartParticlesEl.querySelectorAll(".fart-particle").forEach((particle) => {
+    const baseDuration = Number(particle.dataset.baseDuration || "18");
+    particle.style.animationDuration = `${Math.max(2.2, baseDuration * multiplier).toFixed(2)}s`;
+  });
 
-    fartParticlesEl.appendChild(particle);
+  fartSpeedResetTimer = window.setTimeout(() => {
+    fartParticlesEl.querySelectorAll(".fart-particle").forEach((particle) => {
+      const baseDuration = Number(particle.dataset.baseDuration || "18");
+      particle.style.animationDuration = `${baseDuration.toFixed(2)}s`;
+    });
+  }, duration);
+}
+
+function playFartSound() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  if (!fartAudioContext) {
+    fartAudioContext = new AudioContextClass();
   }
+
+  if (fartAudioContext.state === "suspended") {
+    fartAudioContext.resume().catch(() => {});
+  }
+
+  const now = fartAudioContext.currentTime;
+  const output = fartAudioContext.createGain();
+  output.gain.setValueAtTime(0.0001, now);
+  output.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
+  output.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+  output.connect(fartAudioContext.destination);
+
+  const noiseBuffer = fartAudioContext.createBuffer(1, fartAudioContext.sampleRate * 0.5, fartAudioContext.sampleRate);
+  const noiseData = noiseBuffer.getChannelData(0);
+  for (let index = 0; index < noiseData.length; index += 1) {
+    noiseData[index] = Math.random() * 2 - 1;
+  }
+
+  const noiseSource = fartAudioContext.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+
+  const noiseFilter = fartAudioContext.createBiquadFilter();
+  noiseFilter.type = "bandpass";
+  noiseFilter.frequency.setValueAtTime(240, now);
+  noiseFilter.frequency.exponentialRampToValueAtTime(120, now + 0.35);
+  noiseFilter.Q.value = 0.9;
+
+  const hissGain = fartAudioContext.createGain();
+  hissGain.gain.setValueAtTime(0.0001, now);
+  hissGain.gain.exponentialRampToValueAtTime(0.9, now + 0.02);
+  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+
+  noiseSource.connect(noiseFilter);
+  noiseFilter.connect(hissGain);
+  hissGain.connect(output);
+
+  const tone = fartAudioContext.createOscillator();
+  tone.type = "sawtooth";
+  tone.frequency.setValueAtTime(70, now);
+  tone.frequency.exponentialRampToValueAtTime(36, now + 0.32);
+
+  const toneFilter = fartAudioContext.createBiquadFilter();
+  toneFilter.type = "lowpass";
+  toneFilter.frequency.setValueAtTime(700, now);
+
+  const toneGain = fartAudioContext.createGain();
+  toneGain.gain.setValueAtTime(0.0001, now);
+  toneGain.gain.exponentialRampToValueAtTime(0.14, now + 0.03);
+  toneGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+
+  tone.connect(toneFilter);
+  toneFilter.connect(toneGain);
+  toneGain.connect(output);
+
+  noiseSource.start(now);
+  noiseSource.stop(now + 0.5);
+  tone.start(now);
+  tone.stop(now + 0.5);
+}
+
+function triggerFartStorm() {
+  addFartParticles(28, { fast: true });
+  boostFartParticles(0.5, 2600);
+  playFartSound();
 }
 
 function setChartFallback(chartUrl) {
@@ -126,11 +233,11 @@ async function fetchTokenMetrics() {
         if (Number.isFinite(nextMarketCap) && nextMarketCap > 0) marketCap = nextMarketCap;
         if (Number.isFinite(nextVolume) && nextVolume >= 0) volume = nextVolume;
 
-			const chartUrl = getChartUrl(bestPair);
-			if (dexChartEl && chartUrl) {
-				dexChartEl.src = chartUrl;
-        setChartFallback(chartUrl);
-			}
+        const chartUrl = getChartUrl(bestPair);
+        if (dexChartEl && chartUrl) {
+          dexChartEl.src = chartUrl;
+          setChartFallback(chartUrl);
+        }
       }
     }
 
@@ -229,6 +336,16 @@ aiTermClose.addEventListener("click", () => toggleTerminal(false));
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && aiTerminal.classList.contains("open")) {
     toggleTerminal(false);
+    return;
+  }
+
+  const targetTag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : "";
+  if (targetTag === "input" || targetTag === "textarea" || targetTag === "select" || (e.target && e.target.isContentEditable)) {
+    return;
+  }
+
+  if (!e.repeat && e.key && e.key.toLowerCase() === "f") {
+    triggerFartStorm();
   }
 });
 
