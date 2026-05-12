@@ -1,57 +1,99 @@
 const formatPrice = (value) => `$${value.toFixed(6)}`;
 const formatNumber = (value) => value.toLocaleString("fr-FR");
+const formatCurrency = (value) =>
+  new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
 
 const priceEl = document.getElementById("priceValue");
+const marketCapEl = document.getElementById("marketCapValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = 0.000001;
-let holders = 5821;
-let volume = 182340;
+let marketCap = null;
+let holders = null;
+let volume = null;
 
-// Fetch price from Birdeye API
-async function fetchRealPrice() {
+function pickBestPair(pairs = []) {
+  return pairs.reduce((best, pair) => {
+    if (!best) return pair;
+    const bestScore = (best.liquidity?.usd || 0) + (best.volume?.h24 || 0);
+    const pairScore = (pair.liquidity?.usd || 0) + (pair.volume?.h24 || 0);
+    return pairScore > bestScore ? pair : best;
+  }, null);
+}
+
+async function fetchTokenMetrics() {
 	try {
-		const response = await fetch(
-			`https://api.birdeye.so/defi/token_price?address=${TOKEN_ADDRESS}`,
-			{
-				headers: {
-					"X-API-KEY": "c9d0280e6c6f4cd1bb9a8ba5d06fcbf6"
-				}
-			}
-		);
-		
-		if (response.ok) {
-			const data = await response.json();
-			if (data.data && data.data.value) {
-				price = data.data.value;
-				if (priceEl) priceEl.textContent = formatPrice(price);
-			}
-		}
+    const [dexResponse, holdersResponse] = await Promise.all([
+      fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`),
+      fetch("https://api.mainnet-beta.solana.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "getProgramAccounts",
+          params: [
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            {
+              encoding: "jsonParsed",
+              filters: [
+                { dataSize: 165 },
+                { memcmp: { offset: 0, bytes: TOKEN_ADDRESS } },
+              ],
+            },
+          ],
+        }),
+      }),
+    ]);
+
+    if (dexResponse.ok) {
+      const dexData = await dexResponse.json();
+      const bestPair = pickBestPair(dexData.pairs || []);
+      if (bestPair) {
+        const nextPrice = Number(bestPair.priceUsd);
+        const nextMarketCap = Number(bestPair.marketCap || bestPair.fdv || 0);
+        const nextVolume = Number(bestPair.volume?.h24 || 0);
+
+        if (Number.isFinite(nextPrice) && nextPrice > 0) price = nextPrice;
+        if (Number.isFinite(nextMarketCap) && nextMarketCap > 0) marketCap = nextMarketCap;
+        if (Number.isFinite(nextVolume) && nextVolume >= 0) volume = nextVolume;
+      }
+    }
+
+    if (holdersResponse.ok) {
+      const holdersData = await holdersResponse.json();
+      const uniqueOwners = new Set();
+
+      for (const account of holdersData.result || []) {
+        const parsed = account?.account?.data?.parsed?.info;
+        const owner = parsed?.owner;
+        const amount = Number(parsed?.tokenAmount?.uiAmount || 0);
+
+        if (owner && amount > 0) {
+          uniqueOwners.add(owner);
+        }
+      }
+
+      holders = uniqueOwners.size;
+    }
 	} catch (error) {
-		console.log("Birdeye API unavailable, using default price");
+    console.log("Token metrics unavailable, keeping current values");
 	}
+
+  if (priceEl) priceEl.textContent = formatPrice(price);
+  if (marketCapEl && marketCap !== null) marketCapEl.textContent = formatCurrency(marketCap);
+  if (holdersEl && holders !== null) holdersEl.textContent = formatNumber(holders);
+  if (volumeEl && volume !== null) volumeEl.textContent = formatCurrency(volume);
 }
 
-function updateMockMetrics() {
-	// Price variation
-	const swing = (Math.random() - 0.45) * price * 0.05;
-	price = Math.max(0.000001, price + swing);
-	
-	holders += Math.floor(Math.random() * 9);
-	volume += Math.floor(Math.random() * 12000);
-
-	if (priceEl) priceEl.textContent = formatPrice(price);
-	if (holdersEl) holdersEl.textContent = formatNumber(holders);
-	if (volumeEl) volumeEl.textContent = `$${formatNumber(volume)}`;
-}
-
-// Fetch real price on page load
-fetchRealPrice();
-
-// Update metrics every 5 seconds
-setInterval(updateMockMetrics, 5000);
+fetchTokenMetrics();
+setInterval(fetchTokenMetrics, 60000);
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
