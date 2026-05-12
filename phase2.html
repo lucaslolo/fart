@@ -96,15 +96,38 @@
 			animation: phase2CatBreathe 2.8s ease-in-out infinite;
 		}
 
-		.phase2-fart {
+		.farts {
 			position: absolute;
-			bottom: 18%;
-			right: -8%;
-			font-size: clamp(3.5rem, 9vw, 6rem);
-			color: #ff8833;
-			text-shadow: 0 0 20px rgba(255, 140, 66, 0.95);
-			animation: phase2FartWiggle 0.6s ease-in-out infinite;
+			inset: 0;
+			pointer-events: none;
+			overflow: hidden;
 		}
+
+		.fart-particle {
+			position: absolute;
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			background: radial-gradient(circle at 30% 30%, rgba(255, 210, 140, 1), rgba(255, 140, 66, 0.9));
+			filter: blur(6px);
+			opacity: 0.95;
+			mix-blend-mode: screen;
+			transform: translate3d(0,0,0);
+			animation: fartFly linear infinite;
+		}
+
+		.fart-particle:nth-child(1)  { --size:24px; left: 10%;  top: 80%; animation-duration: 3.2s; animation-delay: 0s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(2)  { --size:28px; left: 80%;  top: 75%; animation-duration: 4.0s; animation-delay: 0.4s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(3)  { --size:18px; left: 50%;  top: 60%; animation-duration: 2.6s; animation-delay: 0.2s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(4)  { --size:34px; left: 30%;  top: 30%; animation-duration: 3.8s; animation-delay: 0.6s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(5)  { --size:20px; left: 70%;  top: 20%; animation-duration: 2.8s; animation-delay: 0.8s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(6)  { --size:26px; left: 15%;  top: 40%; animation-duration: 3.6s; animation-delay: 0.3s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(7)  { --size:22px; left: 60%;  top: 45%; animation-duration: 3.0s; animation-delay: 0.7s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(8)  { --size:30px; left: 42%;  top: 85%; animation-duration: 4.4s; animation-delay: 1.0s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(9)  { --size:16px; left: 88%;  top: 55%; animation-duration: 2.4s; animation-delay: 0.2s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(10) { --size:36px; left: 5%;   top: 10%; animation-duration: 4.6s; animation-delay: 0.5s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(11) { --size:20px; left: 92%;  top: 10%; animation-duration: 3.2s; animation-delay: 0.9s; width:var(--size);height:var(--size); }
+		.fart-particle:nth-child(12) { --size:24px; left: 24%;  top: 68%; animation-duration: 3.4s; animation-delay: 0.1s; width:var(--size);height:var(--size); }
 
 		.phase2-actions {
 			display: flex;
@@ -173,9 +196,22 @@
 				<h1 class="phase2-title">Nous avons besoin de votre aide pour passer a la phase 2</h1>
 				<p class="phase2-copy">Notre ATH est sous pression. Le chat a activé le mode alerte orange, son pet devient orange, et maintenant il faut pousser plus fort pour passer au niveau suivant.</p>
 				<div class="phase2-cat-stage" aria-hidden="true">
-<img class="phase2-cat" src="fartcat.jpg" alt="FartCat en alerte orange" />
-					<div class="phase2-fart">💨</div>
+				<img class="phase2-cat" src="fartcat.jpg" alt="FartCat en alerte orange" />
+				<div class="farts" aria-hidden="true">
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
+					<span class="fart-particle"></span>
 				</div>
+			</div>
 				<p class="phase2-note">Phase 2: help needed. ATH signal detected.</p>
 				<div class="phase2-actions">
 					<a class="btn" href="index.html">Retour à la base</a>
