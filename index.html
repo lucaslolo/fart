@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>FartCat - Le memecoin qui miaule fort</title>
+	<meta name="description" content="FartCat est un memecoin fun, rapide et communautaire. Miaou + chaos + vibes." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="index.css" />
+</head>
+<body>
+	<div class="bg-noise" aria-hidden="true"></div>
+
+	<header class="site-header">
+		<div class="container nav-wrap">
+			<a href="#" class="brand">
+				<span class="brand-icon">🐈💨</span>
+				<span class="brand-text">FARTCAT</span>
+			</a>
+
+			<button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+
+			<nav class="main-nav" id="mainNav">
+				<a href="#tokenomics">Tokenomics</a>
+				<a href="#roadmap">Roadmap</a>
+				<a href="#faq">FAQ</a>
+				<a href="#join" class="btn btn-small">Rejoindre</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<section class="hero container">
+			<div class="hero-copy reveal">
+				<p class="eyebrow">MEMECOIN DEGEN FRIENDLY</p>
+				<h1>FartCat <span class="accent">lance des miaulements</span> sur la blockchain.</h1>
+				<p class="lead">
+					Le token le plus absurde de la galaxie crypto: zéro prise de tete, 100% communaute,
+					et une mascotte qui n a peur de rien.
+				</p>
+
+				<div class="hero-actions">
+					<a class="btn" href="#join">Acheter maintenant</a>
+					<button class="btn btn-ghost" id="copyContractBtn" type="button">Copier le contrat</button>
+				</div>
+
+				<p class="contract-line">
+					CA: <span id="contractAddress">0xF4R7C47F4R7C47F4R7C47F4R7C47F4R7C47F4R7</span>
+					<span id="copyFeedback" class="copy-feedback" aria-live="polite"></span>
+				</p>
+			</div>
+
+			<div class="hero-card reveal-delay">
+				<h2>Live Meme Metrics</h2>
+				<ul>
+					<li>
+						<span>Prix</span>
+						<strong id="priceValue">$0.000000</strong>
+					</li>
+					<li>
+						<span>Holders</span>
+						<strong id="holdersValue">0</strong>
+					</li>
+					<li>
+						<span>Volume 24h</span>
+						<strong id="volumeValue">$0</strong>
+					</li>
+				</ul>
+				<p class="tiny">* Donnees simulees pour la demo vitrine.</p>
+			</div>
+		</section>
+
+		<section class="ticker" aria-label="Nouvelles du marche">
+			<div class="ticker-track" id="tickerTrack">
+				<span>FARTCAT +420% de vibes</span>
+				<span>La communaute miaule sur X</span>
+				<span>Pas de taxe, full chaos</span>
+				<span>Roadmap: Moon, Mars, Beyond</span>
+				<span>FARTCAT +420% de vibes</span>
+			</div>
+		</section>
+
+		<section class="section container" id="tokenomics">
+			<p class="eyebrow">TOKENOMICS</p>
+			<h2>Simple. Sale. Efficace.</h2>
+			<div class="grid cards-3">
+				<article class="card reveal">
+					<h3>Supply</h3>
+					<p>1,000,000,000 FARTCAT fixes. Pas d inflation, pas de magie.</p>
+				</article>
+				<article class="card reveal">
+					<h3>Taxe</h3>
+					<p>0% achat, 0% vente. Tu degenes, tu respires.</p>
+				</article>
+				<article class="card reveal">
+					<h3>Liquidite</h3>
+					<p>LP lockee pour garder la confiance et la folie.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="section section-alt" id="roadmap">
+			<div class="container">
+				<p class="eyebrow">ROADMAP</p>
+				<h2>Plan de domination felino-gazeuse</h2>
+				<div class="timeline">
+					<div class="step reveal">
+						<span>Phase 1</span>
+						<p>Launch, memes, raids communautaires.</p>
+					</div>
+					<div class="step reveal">
+						<span>Phase 2</span>
+						<p>Listings, collabs et contenus viraux.</p>
+					</div>
+					<div class="step reveal">
+						<span>Phase 3</span>
+						<p>NFT degen + mini-jeu FartCat Run.</p>
+					</div>
+					<div class="step reveal">
+						<span>Phase 4</span>
+						<p>Objectif: lunaire, intersidereal, ridicule.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section container" id="faq">
+			<p class="eyebrow">FAQ</p>
+			<h2>Questions de degens</h2>
+			<div class="faq reveal">
+				<details>
+					<summary>FartCat est-il un investissement garanti ?</summary>
+					<p>Non. C est un memecoin, donc volatil et risqué. Fais toujours tes propres recherches.</p>
+				</details>
+				<details>
+					<summary>Ou acheter FARTCAT ?</summary>
+					<p>Sur les DEX compatibles une fois le token lance publiquement.</p>
+				</details>
+				<details>
+					<summary>La communaute est ou ?</summary>
+					<p>Sur X, Telegram et partout ou les memes respirent.</p>
+				</details>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer" id="join">
+		<div class="container footer-wrap">
+			<h2>Prêt a miauler avec la meute ?</h2>
+			<div class="footer-actions">
+				<a class="btn" href="#">X / Twitter</a>
+				<a class="btn btn-ghost" href="#">Telegram</a>
+			</div>
+			<p>2026 FartCat. Meme first, utility maybe later.</p>
+		</div>
+	</footer>
+
+	<script src="script.js"></script>
+</body>
+</html>
