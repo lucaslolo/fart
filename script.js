@@ -1,6 +1,25 @@
 const formatPrice = (value) => `$${value.toFixed(6)}`;
 const formatNumber = (value) => value.toLocaleString("fr-FR");
 
+// ── Bubble Image Rotation ─────────────────────────────────────
+
+const bubbleImg = document.getElementById("bubbleImg");
+const bubbleImages = ["fartcat.jpg", "bandfartcat.jpg"];
+let bubbleIndex = 0;
+
+if (bubbleImg) {
+	setInterval(() => {
+		bubbleIndex = (bubbleIndex + 1) % bubbleImages.length;
+		bubbleImg.style.opacity = "0";
+		setTimeout(() => {
+			bubbleImg.src = bubbleImages[bubbleIndex];
+			bubbleImg.style.opacity = "1";
+		}, 300);
+	}, 4000);
+	
+	bubbleImg.style.transition = "opacity 0.3s ease";
+}
+
 const priceEl = document.getElementById("priceValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
