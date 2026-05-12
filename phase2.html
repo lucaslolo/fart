@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>FartCat - Phase 2</title>
-	<meta name="description" content="Phase 2 de FartCat : help needed, red chaos, and next-level degen energy." />
+	<meta name="description" content="Phase 2 de FartCat : help needed, orange chaos, and next-level degen energy." />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Syne:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
@@ -24,20 +24,22 @@
 		.phase2-panel {
 			width: min(880px, 94vw);
 			max-height: calc(100vh - 2rem);
-			border: 1px solid rgba(255, 52, 52, 0.35);
+			border: 1px solid rgba(255, 140, 66, 0.45);
 			border-radius: 20px;
-			background: linear-gradient(180deg, rgba(40, 0, 0, 0.96), rgba(8, 5, 5, 0.98));
-			box-shadow: 0 0 42px rgba(255, 40, 40, 0.22), var(--shadow);
+			background: linear-gradient(180deg, rgba(68, 40, 0, 0.96), rgba(20, 12, 0, 0.98));
+			box-shadow: 0 0 42px rgba(255, 140, 66, 0.28), var(--shadow);
 			overflow: hidden;
 			position: relative;
+			animation: phase2PanelPulse 2.2s ease-in-out infinite;
 		}
 
 		.phase2-panel::before {
 			content: "";
 			position: absolute;
 			inset: 0;
-			background: radial-gradient(circle at top, rgba(255, 60, 60, 0.2), transparent 55%);
+			background: radial-gradient(circle at top, rgba(255, 160, 80, 0.25), transparent 55%);
 			pointer-events: none;
+			animation: phase2GlowPulse 3s ease-in-out infinite;
 		}
 
 		.phase2-hero {
@@ -51,9 +53,10 @@
 			font-family: "Share Tech Mono", monospace;
 			letter-spacing: 0.34em;
 			text-transform: uppercase;
-			color: #ff6b6b;
+			color: #ff9933;
 			font-size: 0.74rem;
 			margin: 0;
+			animation: phase2KickerGlow 2s ease-in-out infinite;
 		}
 
 		.phase2-title {
@@ -61,8 +64,9 @@
 			font-size: clamp(1.8rem, 5vw, 3.6rem);
 			line-height: 0.96;
 			margin: 0;
-			color: #ffe9e9;
-			text-shadow: 0 0 24px rgba(255, 52, 52, 0.55);
+			color: #fff4e6;
+			text-shadow: 0 0 24px rgba(255, 140, 66, 0.65), 0 0 12px rgba(255, 160, 80, 0.4);
+			animation: phase2TitlePulse 2.4s ease-in-out infinite;
 		}
 
 		.phase2-copy {
@@ -70,7 +74,7 @@
 			margin: 0 auto;
 			font-size: clamp(0.88rem, 1.8vw, 1.08rem);
 			line-height: 1.5;
-			color: #f0bcbc;
+			color: #f5d4a8;
 		}
 
 		.phase2-cat-stage {
@@ -87,9 +91,9 @@
 			height: 100%;
 			object-fit: cover;
 			border-radius: 32px;
-			border: 2px solid rgba(255, 74, 74, 0.35);
-			box-shadow: 0 0 40px rgba(255, 52, 52, 0.24);
-			animation: phase2Float 3.2s ease-in-out infinite;
+			border: 2px solid rgba(255, 140, 66, 0.45);
+			box-shadow: 0 0 40px rgba(255, 140, 66, 0.32), inset 0 0 20px rgba(255, 160, 80, 0.15);
+			animation: phase2CatBreathe 2.8s ease-in-out infinite;
 		}
 
 		.phase2-fart {
@@ -97,9 +101,9 @@
 			bottom: 18%;
 			right: -8%;
 			font-size: clamp(3.5rem, 9vw, 6rem);
-			color: #ff3c3c;
-			text-shadow: 0 0 22px rgba(255, 52, 52, 0.9);
-			animation: phase2Fart 1s ease-in-out infinite;
+			color: #ff8833;
+			text-shadow: 0 0 20px rgba(255, 140, 66, 0.95);
+			animation: phase2FartWiggle 0.6s ease-in-out infinite;
 		}
 
 		.phase2-actions {
@@ -114,17 +118,49 @@
 			font-family: "Share Tech Mono", monospace;
 			text-transform: uppercase;
 			letter-spacing: 0.16em;
-			color: #ff7a7a;
+			color: #ff9966;
+			animation: phase2NotePulse 1.8s ease-in-out infinite;
 		}
 
-		@keyframes phase2Float {
-			0%, 100% { transform: translateY(0) rotate(-1deg); }
-			50% { transform: translateY(-10px) rotate(2deg); }
+		@keyframes phase2PanelPulse {
+			0%, 100% { box-shadow: 0 0 42px rgba(255, 140, 66, 0.28), var(--shadow); }
+			50% { box-shadow: 0 0 52px rgba(255, 140, 66, 0.42), var(--shadow); }
 		}
 
-		@keyframes phase2Fart {
-			0%, 100% { transform: scale(1) translateX(0); }
-			50% { transform: scale(1.12) translateX(4px); }
+		@keyframes phase2GlowPulse {
+			0%, 100% { opacity: 0.6; }
+			50% { opacity: 1; }
+		}
+
+		@keyframes phase2KickerGlow {
+			0%, 100% { text-shadow: 0 0 8px rgba(255, 140, 66, 0.4); }
+			50% { text-shadow: 0 0 16px rgba(255, 140, 66, 0.8); }
+		}
+
+		@keyframes phase2TitlePulse {
+			0%, 100% { 
+				text-shadow: 0 0 24px rgba(255, 140, 66, 0.65), 0 0 12px rgba(255, 160, 80, 0.4);
+			}
+			50% { 
+				text-shadow: 0 0 32px rgba(255, 140, 66, 0.85), 0 0 16px rgba(255, 160, 80, 0.6);
+			}
+		}
+
+		@keyframes phase2CatBreathe {
+			0%, 100% { transform: scale(1) rotate(-0.5deg); filter: saturate(1.1) brightness(1); }
+			50% { transform: scale(1.04) rotate(0.5deg); filter: saturate(1.25) brightness(1.08); }
+		}
+
+		@keyframes phase2FartWiggle {
+			0%, 100% { transform: translateX(0) rotate(0deg) scaleY(1); }
+			25% { transform: translateX(4px) rotate(-8deg) scaleY(1.1); }
+			50% { transform: translateX(0) rotate(0deg) scaleY(0.95); }
+			75% { transform: translateX(-4px) rotate(8deg) scaleY(1.1); }
+		}
+
+		@keyframes phase2NotePulse {
+			0%, 100% { opacity: 0.8; text-shadow: 0 0 8px rgba(255, 140, 66, 0.5); }
+			50% { opacity: 1; text-shadow: 0 0 16px rgba(255, 140, 66, 0.9); }
 		}
 	</style>
 </head>
@@ -135,9 +171,9 @@
 			<div class="phase2-hero">
 				<p class="phase2-kicker">PHASE 2 UNLOCKED</p>
 				<h1 class="phase2-title">Nous avons besoin de votre aide pour passer a la phase 2</h1>
-				<p class="phase2-copy">Notre ATH est sous pression. Le chat a activé le mode alerte rouge, son pet devient rouge, et maintenant il faut pousser plus fort pour passer au niveau suivant.</p>
+				<p class="phase2-copy">Notre ATH est sous pression. Le chat a activé le mode alerte orange, son pet devient orange, et maintenant il faut pousser plus fort pour passer au niveau suivant.</p>
 				<div class="phase2-cat-stage" aria-hidden="true">
-					<img class="phase2-cat" src="fartcat.jpg" alt="FartCat en alerte rouge" />
+<img class="phase2-cat" src="fartcat.jpg" alt="FartCat en alerte orange" />
 					<div class="phase2-fart">💨</div>
 				</div>
 				<p class="phase2-note">Phase 2: help needed. ATH signal detected.</p>
