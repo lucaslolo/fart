@@ -14,6 +14,7 @@ const volumeEl = document.getElementById("volumeValue");
 const dexChartEl = document.getElementById("dexChart");
 const dexChartLinkEl = document.getElementById("dexChartLink");
 const fartParticlesEl = document.getElementById("fartParticles");
+const systemErrorLayer = document.getElementById("systemErrorLayer");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = null;
@@ -51,6 +52,9 @@ function buildFartParticle({ fast = false } = {}) {
   particle.className = "fart-particle";
   particle.src = "fart.png";
   particle.alt = "";
+  if (fast) {
+    particle.classList.add("fart-particle-red");
+  }
 
   const size = fast ? randomBetween(32, 72) : randomBetween(28, 64);
   const duration = fast ? randomBetween(4.5, 10.5) : randomBetween(12, 28);
@@ -132,8 +136,8 @@ function playFartSound() {
   const now = fartAudioContext.currentTime;
   const output = fartAudioContext.createGain();
   output.gain.setValueAtTime(0.0001, now);
-  output.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
-  output.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+  output.gain.exponentialRampToValueAtTime(0.5, now + 0.02);
+  output.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
   output.connect(fartAudioContext.destination);
 
   const noiseBuffer = fartAudioContext.createBuffer(1, fartAudioContext.sampleRate * 0.5, fartAudioContext.sampleRate);
@@ -147,32 +151,32 @@ function playFartSound() {
 
   const noiseFilter = fartAudioContext.createBiquadFilter();
   noiseFilter.type = "bandpass";
-  noiseFilter.frequency.setValueAtTime(240, now);
-  noiseFilter.frequency.exponentialRampToValueAtTime(120, now + 0.35);
-  noiseFilter.Q.value = 0.9;
+  noiseFilter.frequency.setValueAtTime(180, now);
+  noiseFilter.frequency.exponentialRampToValueAtTime(95, now + 0.45);
+  noiseFilter.Q.value = 1.2;
 
   const hissGain = fartAudioContext.createGain();
   hissGain.gain.setValueAtTime(0.0001, now);
-  hissGain.gain.exponentialRampToValueAtTime(0.9, now + 0.02);
-  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+  hissGain.gain.exponentialRampToValueAtTime(1.8, now + 0.02);
+  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
 
   noiseSource.connect(noiseFilter);
   noiseFilter.connect(hissGain);
   hissGain.connect(output);
 
   const tone = fartAudioContext.createOscillator();
-  tone.type = "sawtooth";
-  tone.frequency.setValueAtTime(70, now);
-  tone.frequency.exponentialRampToValueAtTime(36, now + 0.32);
+  tone.type = "triangle";
+  tone.frequency.setValueAtTime(92, now);
+  tone.frequency.exponentialRampToValueAtTime(42, now + 0.4);
 
   const toneFilter = fartAudioContext.createBiquadFilter();
   toneFilter.type = "lowpass";
-  toneFilter.frequency.setValueAtTime(700, now);
+  toneFilter.frequency.setValueAtTime(520, now);
 
   const toneGain = fartAudioContext.createGain();
   toneGain.gain.setValueAtTime(0.0001, now);
-  toneGain.gain.exponentialRampToValueAtTime(0.14, now + 0.03);
-  toneGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+  toneGain.gain.exponentialRampToValueAtTime(0.4, now + 0.03);
+  toneGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
 
   tone.connect(toneFilter);
   toneFilter.connect(toneGain);
@@ -188,6 +192,29 @@ function triggerFartStorm() {
   addFartParticles(28, { fast: true });
   boostFartParticles(0.5, 2600);
   playFartSound();
+}
+
+function showSystemErrorBurst() {
+  if (!systemErrorLayer) return;
+
+  const burst = document.createElement("div");
+  burst.className = "system-error-burst";
+  burst.textContent = "SYSTEM ERROR";
+  systemErrorLayer.appendChild(burst);
+
+  window.setTimeout(() => {
+    burst.classList.add("visible");
+  }, 10);
+
+  window.setTimeout(() => {
+    burst.classList.remove("visible");
+    burst.remove();
+  }, 900);
+}
+
+function triggerClickChaos() {
+  triggerFartStorm();
+  showSystemErrorBurst();
 }
 
 function setChartFallback(chartUrl) {
@@ -347,6 +374,15 @@ document.addEventListener("keydown", (e) => {
   if (!e.repeat && e.key && e.key.toLowerCase() === "f") {
     triggerFartStorm();
   }
+});
+
+document.addEventListener("pointerdown", (e) => {
+  const targetTag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : "";
+  if (targetTag === "input" || targetTag === "textarea" || targetTag === "select" || (e.target && e.target.isContentEditable)) {
+    return;
+  }
+
+  triggerClickChaos();
 });
 
 function appendMsg(role, text) {

@@ -73,6 +73,10 @@ body {
 	will-change: transform, opacity;
 }
 
+.fart-particle-red {
+	filter: hue-rotate(-42deg) saturate(4) brightness(1.15) drop-shadow(0 0 12px rgba(255, 48, 48, 0.55));
+}
+
 @keyframes fartDrift {
 	0% {
 		transform: translate3d(var(--x0), var(--y0), 0) rotate(0deg) scale(var(--scale));
@@ -104,6 +108,61 @@ body {
 		rgba(0, 0, 0, 0.07) 4px
 	);
 	pointer-events: none;
+}
+
+.system-error-layer {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	overflow: hidden;
+	z-index: 90;
+}
+
+.system-error-burst {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) scale(0.7);
+	padding: 0.8rem 1.2rem;
+	border: 1px solid rgba(255, 44, 44, 0.8);
+	border-radius: 999px;
+	background: rgba(70, 0, 0, 0.85);
+	color: #ff5252;
+	font-family: "Share Tech Mono", monospace;
+	font-size: clamp(1rem, 2vw, 1.6rem);
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	text-shadow: 0 0 12px rgba(255, 66, 66, 0.9);
+	box-shadow: 0 0 24px rgba(255, 52, 52, 0.45), inset 0 0 18px rgba(255, 52, 52, 0.25);
+	opacity: 0;
+	filter: blur(2px);
+	animation: systemErrorPulse 0.9s ease-out forwards;
+}
+
+.system-error-burst.visible {
+	filter: blur(0);
+}
+
+@keyframes systemErrorPulse {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(0.7) skewX(-14deg);
+		letter-spacing: 0.3em;
+	}
+	25% {
+		opacity: 1;
+	}
+	45% {
+		transform: translate(-50%, -50%) scale(1.08) skewX(10deg);
+	}
+	70% {
+		transform: translate(-50%, -50%) scale(0.98) skewX(-6deg);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(1.2) skewX(0deg);
+		letter-spacing: 0.18em;
+	}
 }
 
 .container {
