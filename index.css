@@ -180,10 +180,24 @@ body {
 	transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
+.phase2-transition::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: rgba(255, 60, 60, 0);
+	pointer-events: none;
+	animation: phase2FlashNone 0s;
+}
+
+.phase2-transition.is-active::before {
+	animation: phase2Flash 2.4s ease-out forwards;
+}
+
 .phase2-transition.is-active {
 	opacity: 1;
 	pointer-events: auto;
 	transform: scale(1);
+	animation: phase2Shake 2.4s ease-out forwards;
 }
 
 .phase2-transition-card {
@@ -264,6 +278,40 @@ body {
 	0%,
 	100% { transform: scale(1) translateX(0); }
 	50% { transform: scale(1.15) translateX(4px); }
+}
+
+@keyframes phase2Flash {
+	0% {
+		background: rgba(255, 80, 80, 0.96);
+	}
+	18% {
+		background: rgba(255, 120, 120, 0.82);
+	}
+	35% {
+		background: rgba(255, 60, 60, 0.55);
+	}
+	55% {
+		background: rgba(255, 40, 40, 0.28);
+	}
+	100% {
+		background: rgba(255, 60, 60, 0);
+	}
+}
+
+@keyframes phase2FlashNone {
+	0%, 100% { background: rgba(255, 60, 60, 0); }
+}
+
+@keyframes phase2Shake {
+	0% { transform: translate(0, 0) scale(1); }
+	12% { transform: translate(-8px, 6px) scale(0.998); }
+	24% { transform: translate(10px, -7px) scale(1.002); }
+	36% { transform: translate(-5px, 8px) scale(0.999); }
+	48% { transform: translate(7px, -5px) scale(1.001); }
+	60% { transform: translate(-3px, 4px) scale(1); }
+	72% { transform: translate(2px, -2px) scale(1); }
+	84% { transform: translate(-1px, 1px) scale(1); }
+	100% { transform: translate(0, 0) scale(1); }
 }
 
 .container {

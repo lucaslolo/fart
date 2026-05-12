@@ -197,20 +197,87 @@ function triggerFartStorm() {
   playFartSound();
 }
 
+function playPhase2Sound() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  if (!fartAudioContext) {
+    fartAudioContext = new AudioContextClass();
+  }
+
+  if (fartAudioContext.state === "suspended") {
+    fartAudioContext.resume().catch(() => {});
+  }
+
+  const now = fartAudioContext.currentTime;
+  const output = fartAudioContext.createGain();
+  output.gain.setValueAtTime(0.0001, now);
+  output.gain.exponentialRampToValueAtTime(1.2, now + 0.015);
+  output.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+  output.connect(fartAudioContext.destination);
+
+  const noiseBuffer = fartAudioContext.createBuffer(1, fartAudioContext.sampleRate * 2.4, fartAudioContext.sampleRate);
+  const noiseData = noiseBuffer.getChannelData(0);
+  for (let index = 0; index < noiseData.length; index += 1) {
+    noiseData[index] = (Math.random() * 2 - 1) * (0.3 + Math.random() * 0.7);
+  }
+
+  const noiseSource = fartAudioContext.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+
+  const noiseFilter = fartAudioContext.createBiquadFilter();
+  noiseFilter.type = "bandpass";
+  noiseFilter.frequency.setValueAtTime(320, now);
+  noiseFilter.frequency.exponentialRampToValueAtTime(140, now + 1.8);
+  noiseFilter.Q.value = 1.5;
+
+  const hissGain = fartAudioContext.createGain();
+  hissGain.gain.setValueAtTime(0.0001, now);
+  hissGain.gain.exponentialRampToValueAtTime(2.4, now + 0.015);
+  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+  noiseSource.connect(noiseFilter);
+  noiseFilter.connect(hissGain);
+  hissGain.connect(output);
+
+  const tone = fartAudioContext.createOscillator();
+  tone.type = "sawtooth";
+  tone.frequency.setValueAtTime(140, now);
+  tone.frequency.exponentialRampToValueAtTime(55, now + 1.6);
+
+  const toneFilter = fartAudioContext.createBiquadFilter();
+  toneFilter.type = "lowpass";
+  toneFilter.frequency.setValueAtTime(680, now);
+
+  const toneGain = fartAudioContext.createGain();
+  toneGain.gain.setValueAtTime(0.0001, now);
+  toneGain.gain.exponentialRampToValueAtTime(0.7, now + 0.02);
+  toneGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+  tone.connect(toneFilter);
+  toneFilter.connect(toneGain);
+  toneGain.connect(output);
+
+  noiseSource.start(now);
+  noiseSource.stop(now + 2.4);
+  tone.start(now);
+  tone.stop(now + 2.4);
+}
+
 function openPhase2Transition() {
   if (!phase2TransitionEl || phase2Locked) return;
 
   phase2Locked = true;
   phase2TransitionEl.classList.add("is-active");
   phase2TransitionEl.setAttribute("aria-hidden", "false");
-  addFartParticles(34, { fast: true });
-  boostFartParticles(0.45, 2400);
-  playFartSound();
+  addFartParticles(42, { fast: true });
+  boostFartParticles(0.35, 2400);
+  playPhase2Sound();
 
   window.clearTimeout(phase2TimeoutId);
   phase2TimeoutId = window.setTimeout(() => {
     window.location.href = "phase2.html";
-  }, 2300);
+  }, 2400);
 }
 
 function setChartFallback(chartUrl) {
