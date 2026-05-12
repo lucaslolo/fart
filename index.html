@@ -100,19 +100,64 @@
 
 		<section class="section container chart-section" id="chart">
 			<p class="eyebrow">DEXSCREENER CHART</p>
-			<h2>Charte en direct du pair principal</h2>
+			<h2>Vue du marché en direct</h2>
 			<div class="chart-card reveal">
-				<div class="chart-frame-wrap">
-					<iframe
-						id="dexChart"
-						title="DexScreener chart FartCat"
-						loading="lazy"
-						src="about:blank"
-						allow="clipboard-write"
-					></iframe>
-					<a class="dex-chart-link" id="dexChartLink" href="#" target="_blank" rel="noreferrer">Ouvrir le chart sur DexScreener</a>
+				<div class="chart-summary">
+					<div>
+						<p class="chart-label">Pair principal</p>
+						<strong id="dexPairLabel">Chargement...</strong>
+					</div>
+					<div>
+						<p class="chart-label">Liquidity</p>
+						<strong id="dexLiquidityLabel">—</strong>
+					</div>
+					<div>
+						<p class="chart-label">Volume 24h</p>
+						<strong id="dexVolumeLabel">—</strong>
+					</div>
 				</div>
-				<p class="tiny">Le graphique se charge depuis DexScreener à partir du meilleur pair détecté pour FARTCAT.</p>
+				<a class="btn chart-button" id="dexChartLink" href="#" target="_blank" rel="noreferrer">Ouvrir le chart sur DexScreener</a>
+				<p class="tiny">Les données viennent du pair le plus liquide détecté pour FARTCAT, avec un accès direct au chart DexScreener.</p>
+			</div>
+		</section>
+
+		<section class="section section-alt" id="how-to-buy">
+			<div class="container">
+				<p class="eyebrow">HOW TO BUY</p>
+				<h2>Entrer sur FARTCAT en 3 steps</h2>
+				<div class="grid cards-3">
+					<article class="card reveal">
+						<h3>1. Prépare ton wallet</h3>
+						<p>Installe un wallet Solana comme Phantom ou Solflare, puis charge-le en SOL.</p>
+					</article>
+					<article class="card reveal">
+						<h3>2. Ouvre le bon pair</h3>
+						<p>Utilise le lien DexScreener ou le bouton d'achat pour accéder au marché principal.</p>
+					</article>
+					<article class="card reveal">
+						<h3>3. Swap et surveille</h3>
+						<p>Échange ton SOL contre FARTCAT, puis garde un œil sur le chart et la communauté.</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="section container" id="why-fartcat">
+			<p class="eyebrow">WHY FARTCAT</p>
+			<h2>Pourquoi ce token peut ressortir du bruit</h2>
+			<div class="grid cards-3">
+				<article class="card reveal">
+					<h3>Identité claire</h3>
+					<p>Une marque simple, mémorable, et des visuels qui se retiennent immédiatement.</p>
+				</article>
+				<article class="card reveal">
+					<h3>Communauté directe</h3>
+					<p>Les liens sociaux sont visibles et accessibles pour rejoindre les raids sans friction.</p>
+				</article>
+				<article class="card reveal">
+					<h3>Lecture marché</h3>
+					<p>Le site montre prix, market cap, holders et volume pour suivre le token sans approximation.</p>
+				</article>
 			</div>
 		</section>
 
@@ -176,6 +221,28 @@
 					<summary>La communaute est ou ?</summary>
 					<p>Sur X, Telegram et partout ou les memes respirent.</p>
 				</details>
+			</div>
+		</section>
+
+		<section class="section container" id="official-links">
+			<p class="eyebrow">OFFICIAL LINKS</p>
+			<h2>Les accès officiels</h2>
+			<div class="grid cards-3">
+				<article class="card reveal">
+					<h3>X / Twitter</h3>
+					<p>Suivre les annonces, les memes et les raids communautaires en direct.</p>
+					<a class="btn btn-ghost" href="https://x.com/FartCatOfSol" target="_blank" rel="noreferrer">Ouvrir X</a>
+				</article>
+				<article class="card reveal">
+					<h3>Telegram</h3>
+					<p>Rejoindre la meute et suivre les updates plus vite que le reste du marché.</p>
+					<a class="btn btn-ghost" href="https://t.me/fartcatofsol" target="_blank" rel="noreferrer">Ouvrir Telegram</a>
+				</article>
+				<article class="card reveal">
+					<h3>DexScreener</h3>
+					<p>Consulter le pair, le chart et les variations de marché en un clic.</p>
+					<button class="btn btn-ghost" id="openDexChartBtn" type="button">Voir le chart</button>
+				</article>
 			</div>
 		</section>
 	</main>

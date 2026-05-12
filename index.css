@@ -16,43 +16,43 @@
 	--glow-lg: 0 0 60px rgba(57, 255, 20, 0.22);
 	--shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
+	.chart-summary {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.85rem;
+		margin-bottom: 1rem;
+	}
 
-* {
-	box-sizing: border-box;
-}
+	.chart-summary > div {
+		border: 1px solid rgba(57, 255, 20, 0.12);
+		border-radius: 14px;
+		background: rgba(6, 10, 6, 0.8);
+		padding: 0.9rem 1rem;
+		min-height: 92px;
+	}
 
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
+	.chart-label {
+		margin: 0 0 0.4rem;
+		font-size: 0.74rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
 
-body {
-	font-family: "Syne", sans-serif;
-	color: var(--text);
-	background-color: var(--bg);
-	min-height: 100vh;
-	overflow-x: hidden;
-}
+	.chart-summary strong {
+		display: block;
+		font-family: "Share Tech Mono", monospace;
+		font-size: 1.05rem;
+		color: var(--primary);
+		text-shadow: var(--glow-sm);
+	}
 
-/* ── Background: circuit grid + radial glows ── */
-
-.bg-noise {
-	position: fixed;
-	inset: 0;
-	pointer-events: none;
-	z-index: -1;
-	background:
-		linear-gradient(rgba(57, 255, 20, 0.025) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(57, 255, 20, 0.025) 1px, transparent 1px),
-		radial-gradient(ellipse at 15% 15%, rgba(57, 255, 20, 0.1) 0%, transparent 45%),
-		radial-gradient(ellipse at 85% 70%, rgba(0, 255, 136, 0.07) 0%, transparent 40%),
-		radial-gradient(ellipse at 50% 50%, rgba(20, 40, 20, 0.6) 0%, transparent 80%),
-		var(--bg);
-	background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%, 100% 100%;
-}
-
-.fart-particles {
+	.chart-button {
+		display: inline-flex;
+		margin-top: 0.25rem;
+		align-items: center;
+		justify-content: center;
+		width: fit-content;
 	position: fixed;
 	inset: 0;
 	pointer-events: none;
