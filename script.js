@@ -1,7 +1,7 @@
 const formatPrice = (value) => `$${value.toFixed(6)}`;
-const formatNumber = (value) => value.toLocaleString("fr-FR");
+const formatNumber = (value) => value.toLocaleString("en-US");
 const formatCurrency = (value) =>
-  new Intl.NumberFormat("fr-FR", {
+  new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -362,15 +362,15 @@ if (copyButton && contractAddress) {
     try {
       await navigator.clipboard.writeText(contractAddress.textContent.trim());
       if (copyFeedback) {
-        copyFeedback.textContent = "Copie";
+        copyFeedback.textContent = "Copied";
         setTimeout(() => {
           copyFeedback.textContent = "";
         }, 1800);
       }
     } catch (error) {
       if (copyFeedback) {
-        copyFeedback.textContent = "Echec copie";
-      }
+          copyFeedback.textContent = "Copy failed";
+        }
     }
   });
 }
@@ -503,7 +503,7 @@ aiTermForm.addEventListener("submit", async (e) => {
     const data = await res.json();
     removeTyping();
 
-    const reply = data.reply || data.error || "💨 erreur inconnue, ser";
+    const reply = data.reply || data.error || "💨 unknown error, ser";
     appendMsg("bot", reply);
     chatHistory.push({ role: "assistant", content: reply });
 
@@ -512,7 +512,7 @@ aiTermForm.addEventListener("submit", async (e) => {
     }
   } catch {
     removeTyping();
-    appendMsg("bot", "💨 connexion perdue anon, réessaie plus tard.");
+    appendMsg("bot", "💨 connection lost anon, try again later.");
   }
 
   isWaiting = false;
