@@ -13,6 +13,7 @@ const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
 const dexChartEl = document.getElementById("dexChart");
 const dexChartLinkEl = document.getElementById("dexChartLink");
+const fartParticlesEl = document.getElementById("fartParticles");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = null;
@@ -37,6 +38,49 @@ function getChartUrl(pair) {
 
 	if (!pair.chainId || !pair.pairAddress) return null;
 	return `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
+}
+
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function createFartParticles() {
+  if (!fartParticlesEl) return;
+
+  const count = 18;
+  const particleSource = "fart.png";
+  fartParticlesEl.innerHTML = "";
+
+  for (let index = 0; index < count; index += 1) {
+    const particle = document.createElement("img");
+    particle.className = "fart-particle";
+    particle.src = particleSource;
+    particle.alt = "";
+
+    const size = randomBetween(28, 64);
+    const startX = randomBetween(-10, 110);
+    const startY = randomBetween(-10, 110);
+    const midX = randomBetween(-15, 115);
+    const midY = randomBetween(-15, 115);
+    const endX = randomBetween(-10, 110);
+    const endY = randomBetween(-10, 110);
+
+    particle.style.setProperty("--size", `${size}px`);
+    particle.style.setProperty("--scale", randomBetween(0.7, 1.2).toFixed(2));
+    particle.style.setProperty("--duration", `${randomBetween(12, 28).toFixed(2)}s`);
+    particle.style.setProperty("--x0", `${startX}vw`);
+    particle.style.setProperty("--y0", `${startY}vh`);
+    particle.style.setProperty("--x1", `${midX}vw`);
+    particle.style.setProperty("--y1", `${midY}vh`);
+    particle.style.setProperty("--x2", `${endX}vw`);
+    particle.style.setProperty("--y2", `${endY}vh`);
+    particle.style.setProperty("--rot1", `${randomBetween(-180, 180).toFixed(0)}deg`);
+    particle.style.setProperty("--rot2", `${randomBetween(-360, 360).toFixed(0)}deg`);
+    particle.style.animationDelay = `${randomBetween(-28, 0).toFixed(2)}s`;
+    particle.style.opacity = String(randomBetween(0.35, 0.9));
+
+    fartParticlesEl.appendChild(particle);
+  }
 }
 
 function setChartFallback(chartUrl) {
@@ -110,6 +154,7 @@ async function fetchTokenMetrics() {
 
 fetchTokenMetrics();
 setInterval(fetchTokenMetrics, 300000);
+createFartParticles();
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
