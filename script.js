@@ -5,23 +5,53 @@ const priceEl = document.getElementById("priceValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
 
-let price = 0.000042;
+const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
+let price = 0.000001;
 let holders = 5821;
 let volume = 182340;
 
-function updateMockMetrics() {
-  const swing = (Math.random() - 0.45) * 0.000004;
-  price = Math.max(0.000001, price + swing);
-  holders += Math.floor(Math.random() * 9);
-  volume += Math.floor(Math.random() * 12000);
-
-  if (priceEl) priceEl.textContent = formatPrice(price);
-  if (holdersEl) holdersEl.textContent = formatNumber(holders);
-  if (volumeEl) volumeEl.textContent = `$${formatNumber(volume)}`;
+// Fetch price from Birdeye API
+async function fetchRealPrice() {
+	try {
+		const response = await fetch(
+			`https://api.birdeye.so/defi/token_price?address=${TOKEN_ADDRESS}`,
+			{
+				headers: {
+					"X-API-KEY": "c9d0280e6c6f4cd1bb9a8ba5d06fcbf6"
+				}
+			}
+		);
+		
+		if (response.ok) {
+			const data = await response.json();
+			if (data.data && data.data.value) {
+				price = data.data.value;
+				if (priceEl) priceEl.textContent = formatPrice(price);
+			}
+		}
+	} catch (error) {
+		console.log("Birdeye API unavailable, using default price");
+	}
 }
 
-updateMockMetrics();
-setInterval(updateMockMetrics, 2200);
+function updateMockMetrics() {
+	// Price variation
+	const swing = (Math.random() - 0.45) * price * 0.05;
+	price = Math.max(0.000001, price + swing);
+	
+	holders += Math.floor(Math.random() * 9);
+	volume += Math.floor(Math.random() * 12000);
+
+	if (priceEl) priceEl.textContent = formatPrice(price);
+	if (holdersEl) holdersEl.textContent = formatNumber(holders);
+	if (volumeEl) volumeEl.textContent = `$${formatNumber(volume)}`;
+}
+
+// Fetch real price on page load
+fetchRealPrice();
+
+// Update metrics every 5 seconds
+setInterval(updateMockMetrics, 5000);
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
