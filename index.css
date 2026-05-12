@@ -165,6 +165,107 @@ body {
 	}
 }
 
+.phase2-transition {
+	position: fixed;
+	inset: 0;
+	z-index: 95;
+	display: grid;
+	place-items: center;
+	padding: 1.5rem;
+	background: rgba(5, 0, 0, 0.88);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	pointer-events: none;
+	transform: scale(1.02);
+	transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.phase2-transition.is-active {
+	opacity: 1;
+	pointer-events: auto;
+	transform: scale(1);
+}
+
+.phase2-transition-card {
+	width: min(920px, 94vw);
+	padding: clamp(1.5rem, 4vw, 3rem);
+	border-radius: 28px;
+	border: 1px solid rgba(255, 72, 72, 0.45);
+	background: linear-gradient(180deg, rgba(68, 0, 0, 0.92), rgba(10, 4, 4, 0.98));
+	box-shadow: 0 0 54px rgba(255, 48, 48, 0.24), inset 0 0 20px rgba(255, 48, 48, 0.08);
+	text-align: center;
+}
+
+.phase2-transition-cat-stage {
+	position: relative;
+	width: min(320px, 62vw);
+	aspect-ratio: 1;
+	margin: 0 auto 1.2rem;
+}
+
+.phase2-transition-cat {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 24px;
+	border: 2px solid rgba(255, 96, 96, 0.55);
+	box-shadow: 0 0 30px rgba(255, 52, 52, 0.26);
+	animation: phase2CatPulse 1.9s ease-in-out infinite;
+}
+
+.phase2-transition-fart {
+	position: absolute;
+	right: -6%;
+	bottom: 10%;
+	font-size: clamp(3.2rem, 10vw, 6rem);
+	color: #ff2a2a;
+	text-shadow: 0 0 24px rgba(255, 60, 60, 0.95);
+	animation: phase2FartBounce 0.8s ease-in-out infinite;
+}
+
+.phase2-transition-kicker {
+	margin: 0 0 0.7rem;
+	font-family: "Share Tech Mono", monospace;
+	letter-spacing: 0.34em;
+	text-transform: uppercase;
+	color: #ff7676;
+}
+
+.phase2-transition-title {
+	margin: 0;
+	font-family: "Bungee", cursive;
+	font-size: clamp(2rem, 5vw, 4.5rem);
+	line-height: 1;
+	color: #fff1f1;
+	text-shadow: 0 0 24px rgba(255, 50, 50, 0.45);
+}
+
+.phase2-transition-text {
+	max-width: 56ch;
+	margin: 1rem auto 0;
+	font-size: clamp(1rem, 2vw, 1.2rem);
+	line-height: 1.75;
+	color: #f1baba;
+}
+
+@keyframes phase2CatPulse {
+	0%,
+	100% {
+		transform: translateY(0) rotate(-1deg);
+		filter: saturate(1.2) brightness(1);
+	}
+	50% {
+		transform: translateY(-10px) rotate(2deg);
+		filter: saturate(1.45) brightness(1.08);
+	}
+}
+
+@keyframes phase2FartBounce {
+	0%,
+	100% { transform: scale(1) translateX(0); }
+	50% { transform: scale(1.15) translateX(4px); }
+}
+
 .container {
 	width: min(1140px, 92%);
 	margin-inline: auto;

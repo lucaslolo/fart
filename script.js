@@ -15,6 +15,7 @@ const dexChartEl = document.getElementById("dexChart");
 const dexChartLinkEl = document.getElementById("dexChartLink");
 const fartParticlesEl = document.getElementById("fartParticles");
 const systemErrorLayer = document.getElementById("systemErrorLayer");
+const phase2TransitionEl = document.getElementById("phase2Transition");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = null;
@@ -23,6 +24,8 @@ let holders = null;
 let volume = null;
 let fartAudioContext = null;
 let fartSpeedResetTimer = null;
+let phase2TimeoutId = null;
+let phase2Locked = false;
 
 function pickBestPair(pairs = []) {
   return pairs.reduce((best, pair) => {
@@ -194,27 +197,20 @@ function triggerFartStorm() {
   playFartSound();
 }
 
-function showSystemErrorBurst() {
-  if (!systemErrorLayer) return;
+function openPhase2Transition() {
+  if (!phase2TransitionEl || phase2Locked) return;
 
-  const burst = document.createElement("div");
-  burst.className = "system-error-burst";
-  burst.textContent = "SYSTEM ERROR";
-  systemErrorLayer.appendChild(burst);
+  phase2Locked = true;
+  phase2TransitionEl.classList.add("is-active");
+  phase2TransitionEl.setAttribute("aria-hidden", "false");
+  addFartParticles(34, { fast: true });
+  boostFartParticles(0.45, 2400);
+  playFartSound();
 
-  window.setTimeout(() => {
-    burst.classList.add("visible");
-  }, 10);
-
-  window.setTimeout(() => {
-    burst.classList.remove("visible");
-    burst.remove();
-  }, 900);
-}
-
-function triggerClickChaos() {
-  triggerFartStorm();
-  showSystemErrorBurst();
+  window.clearTimeout(phase2TimeoutId);
+  phase2TimeoutId = window.setTimeout(() => {
+    window.location.href = "phase2.html";
+  }, 2300);
 }
 
 function setChartFallback(chartUrl) {
@@ -372,17 +368,9 @@ document.addEventListener("keydown", (e) => {
   }
 
   if (!e.repeat && e.key && e.key.toLowerCase() === "f") {
-    triggerFartStorm();
+    e.preventDefault();
+    openPhase2Transition();
   }
-});
-
-document.addEventListener("pointerdown", (e) => {
-  const targetTag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : "";
-  if (targetTag === "input" || targetTag === "textarea" || targetTag === "select" || (e.target && e.target.isContentEditable)) {
-    return;
-  }
-
-  triggerClickChaos();
 });
 
 function appendMsg(role, text) {
