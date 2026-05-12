@@ -11,6 +11,7 @@ const priceEl = document.getElementById("priceValue");
 const marketCapEl = document.getElementById("marketCapValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
+const dexChartEl = document.getElementById("dexChart");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = null;
@@ -25,6 +26,16 @@ function pickBestPair(pairs = []) {
     const pairScore = (pair.liquidity?.usd || 0) + (pair.volume?.h24 || 0);
     return pairScore > bestScore ? pair : best;
   }, null);
+}
+
+function getChartUrl(pair) {
+	if (!pair) return null;
+	if (pair.url) {
+		return `${pair.url}${pair.url.includes("?") ? "&" : "?"}embed=1&theme=dark&trades=0&info=0`;
+	}
+
+	if (!pair.chainId || !pair.pairAddress) return null;
+	return `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
 }
 
 async function fetchTokenMetrics() {
@@ -45,6 +56,11 @@ async function fetchTokenMetrics() {
         if (Number.isFinite(nextPrice) && nextPrice > 0) price = nextPrice;
         if (Number.isFinite(nextMarketCap) && nextMarketCap > 0) marketCap = nextMarketCap;
         if (Number.isFinite(nextVolume) && nextVolume >= 0) volume = nextVolume;
+
+			const chartUrl = getChartUrl(bestPair);
+			if (dexChartEl && chartUrl) {
+				dexChartEl.src = chartUrl;
+			}
       }
     }
 

@@ -365,6 +365,38 @@ h1 {
 	text-shadow: var(--glow-sm);
 }
 
+/* ── DexScreener chart ───────────────────────── */
+
+.chart-section h2 {
+	margin-bottom: 1.2rem;
+}
+
+.chart-card {
+	background: linear-gradient(145deg, rgba(14, 25, 11, 0.95), rgba(7, 13, 8, 0.98));
+	border: 1px solid rgba(57, 255, 20, 0.2);
+	border-radius: 18px;
+	padding: 1rem;
+	box-shadow: var(--glow-md), var(--shadow), inset 0 1px 0 rgba(57, 255, 20, 0.08);
+}
+
+.chart-frame-wrap {
+	position: relative;
+	width: 100%;
+	min-height: 620px;
+	border-radius: 14px;
+	overflow: hidden;
+	background: #050805;
+	border: 1px solid rgba(57, 255, 20, 0.12);
+}
+
+.chart-frame-wrap iframe {
+	width: 100%;
+	height: 620px;
+	border: 0;
+	display: block;
+	background: #050805;
+}
+
 .tiny {
 	margin: 1rem 0 0;
 	color: #3a5e3a;
@@ -657,6 +689,12 @@ h1 {
 	.hero {
 		grid-template-columns: 1fr;
 		padding-top: 3.5rem;
+	}
+
+	.chart-frame-wrap,
+	.chart-frame-wrap iframe {
+		min-height: 500px;
+		height: 500px;
 	}
 
 	.cards-3,
