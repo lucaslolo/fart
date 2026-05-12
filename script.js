@@ -12,6 +12,7 @@ const marketCapEl = document.getElementById("marketCapValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
 const dexChartEl = document.getElementById("dexChart");
+const dexChartLinkEl = document.getElementById("dexChartLink");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
 let price = null;
@@ -38,6 +39,30 @@ function getChartUrl(pair) {
 	return `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
 }
 
+function setChartFallback(chartUrl) {
+  if (!dexChartEl || !dexChartLinkEl) return;
+
+  dexChartLinkEl.href = chartUrl || "https://dexscreener.com";
+  dexChartLinkEl.target = "_blank";
+  dexChartLinkEl.rel = "noreferrer";
+
+  window.clearTimeout(window.__dexChartFallbackTimer);
+  window.__dexChartFallbackTimer = window.setTimeout(() => {
+    dexChartEl.classList.add("is-hidden");
+    dexChartLinkEl.classList.add("is-visible");
+  }, 12000);
+
+  dexChartEl.addEventListener(
+    "load",
+    () => {
+      window.clearTimeout(window.__dexChartFallbackTimer);
+      dexChartLinkEl.classList.remove("is-visible");
+      dexChartEl.classList.remove("is-hidden");
+    },
+    { once: true }
+  );
+}
+
 async function fetchTokenMetrics() {
 	try {
     const [dexResponse, holdersResponse] = await Promise.all([
@@ -60,6 +85,7 @@ async function fetchTokenMetrics() {
 			const chartUrl = getChartUrl(bestPair);
 			if (dexChartEl && chartUrl) {
 				dexChartEl.src = chartUrl;
+        setChartFallback(chartUrl);
 			}
       }
     }

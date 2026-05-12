@@ -397,6 +397,29 @@ h1 {
 	background: #050805;
 }
 
+.dex-chart-link {
+	display: none;
+	position: absolute;
+	inset: 50% auto auto 50%;
+	transform: translate(-50%, -50%);
+	padding: 0.85rem 1.1rem;
+	border-radius: 999px;
+	background: var(--primary);
+	color: #030503;
+	font-weight: 800;
+	text-decoration: none;
+	box-shadow: var(--shadow);
+	z-index: 2;
+}
+
+.dex-chart-link.is-visible {
+	display: inline-flex;
+}
+
+.chart-frame-wrap iframe.is-hidden {
+	display: none;
+}
+
 .tiny {
 	margin: 1rem 0 0;
 	color: #3a5e3a;
