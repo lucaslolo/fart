@@ -11,11 +11,8 @@ const priceEl = document.getElementById("priceValue");
 const marketCapEl = document.getElementById("marketCapValue");
 const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
+const dexChartEl = document.getElementById("dexChart");
 const dexChartLinkEl = document.getElementById("dexChartLink");
-const dexPairLabelEl = document.getElementById("dexPairLabel");
-const dexLiquidityLabelEl = document.getElementById("dexLiquidityLabel");
-const dexVolumeLabelEl = document.getElementById("dexVolumeLabel");
-const openDexChartBtn = document.getElementById("openDexChartBtn");
 const fartParticlesEl = document.getElementById("fartParticles");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
@@ -23,7 +20,6 @@ let price = null;
 let marketCap = null;
 let holders = null;
 let volume = null;
-let currentChartUrl = "https://dexscreener.com";
 
 function pickBestPair(pairs = []) {
   return pairs.reduce((best, pair) => {
@@ -42,34 +38,6 @@ function getChartUrl(pair) {
 
 	if (!pair.chainId || !pair.pairAddress) return null;
 	return `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
-}
-
-function formatCompactUsd(value) {
-  if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function renderPairDetails(pair) {
-  if (!pair) return;
-
-  const baseSymbol = pair.baseToken?.symbol || "FARTCAT";
-  const quoteSymbol = pair.quoteToken?.symbol || "SOL";
-  const dexId = pair.dexId || "DEX";
-
-  if (dexPairLabelEl) {
-    dexPairLabelEl.textContent = `${baseSymbol} / ${quoteSymbol} sur ${dexId}`;
-  }
-  if (dexLiquidityLabelEl) {
-    dexLiquidityLabelEl.textContent = formatCompactUsd(Number(pair.liquidity?.usd || 0));
-  }
-  if (dexVolumeLabelEl) {
-    dexVolumeLabelEl.textContent = formatCompactUsd(Number(pair.volume?.h24 || 0));
-  }
 }
 
 function randomBetween(min, max) {
@@ -115,13 +83,40 @@ function createFartParticles() {
   }
 }
 
+function setChartFallback(chartUrl) {
+  if (!dexChartEl || !dexChartLinkEl) return;
+
+  dexChartLinkEl.href = chartUrl || "https://dexscreener.com";
+  dexChartLinkEl.target = "_blank";
+  dexChartLinkEl.rel = "noreferrer";
+
+  window.clearTimeout(window.__dexChartFallbackTimer);
+  window.__dexChartFallbackTimer = window.setTimeout(() => {
+    dexChartEl.classList.add("is-hidden");
+    dexChartLinkEl.classList.add("is-visible");
+  }, 12000);
+
+  dexChartEl.addEventListener(
+    "load",
+    () => {
+      window.clearTimeout(window.__dexChartFallbackTimer);
+      dexChartLinkEl.classList.remove("is-visible");
+      dexChartEl.classList.remove("is-hidden");
+    },
+    { once: true }
+  );
+}
+
 async function fetchTokenMetrics() {
 	try {
-    const dexResponse = await fetch("/.netlify/functions/metrics");
+    const [dexResponse, holdersResponse] = await Promise.all([
+      fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`),
+      fetch("/.netlify/functions/holders"),
+    ]);
 
     if (dexResponse.ok) {
       const dexData = await dexResponse.json();
-      const bestPair = dexData.bestPair || pickBestPair(dexData.pairs || []);
+      const bestPair = pickBestPair(dexData.pairs || []);
       if (bestPair) {
         const nextPrice = Number(bestPair.priceUsd);
         const nextMarketCap = Number(bestPair.marketCap || bestPair.fdv || 0);
@@ -131,24 +126,20 @@ async function fetchTokenMetrics() {
         if (Number.isFinite(nextMarketCap) && nextMarketCap > 0) marketCap = nextMarketCap;
         if (Number.isFinite(nextVolume) && nextVolume >= 0) volume = nextVolume;
 
-			currentChartUrl = getChartUrl(bestPair) || currentChartUrl;
-			renderPairDetails(bestPair);
-			if (dexChartLinkEl) {
-				dexChartLinkEl.href = currentChartUrl;
-			}
+        const chartUrl = getChartUrl(bestPair);
+        if (dexChartEl && chartUrl) {
+          dexChartEl.src = chartUrl;
+          setChartFallback(chartUrl);
+        }
       }
+    }
 
-      if (Number.isFinite(Number(dexData.price)) && Number(dexData.price) > 0) {
-        price = Number(dexData.price);
-      }
-      if (Number.isFinite(Number(dexData.marketCap)) && Number(dexData.marketCap) > 0) {
-        marketCap = Number(dexData.marketCap);
-      }
-      if (Number.isFinite(Number(dexData.volume)) && Number(dexData.volume) >= 0) {
-        volume = Number(dexData.volume);
-      }
-      if (Number.isFinite(Number(dexData.holders)) && Number(dexData.holders) >= 0) {
-        holders = Number(dexData.holders);
+    if (holdersResponse.ok) {
+      const holdersData = await holdersResponse.json();
+      const nextHolders = Number(holdersData.holders);
+
+      if (Number.isFinite(nextHolders) && nextHolders >= 0) {
+        holders = nextHolders;
       }
     }
 	} catch (error) {
@@ -164,12 +155,6 @@ async function fetchTokenMetrics() {
 fetchTokenMetrics();
 setInterval(fetchTokenMetrics, 300000);
 createFartParticles();
-
-if (openDexChartBtn) {
-  openDexChartBtn.addEventListener("click", () => {
-    window.open(currentChartUrl, "_blank", "noreferrer");
-  });
-}
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
