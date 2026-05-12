@@ -13,7 +13,7 @@ const holdersEl = document.getElementById("holdersValue");
 const volumeEl = document.getElementById("volumeValue");
 
 const TOKEN_ADDRESS = "3dk9CNre8tmv6bbNXd5F6dgkNnEzsyQ7sPhVT8kKpump";
-let price = 0.000001;
+let price = null;
 let marketCap = null;
 let holders = null;
 let volume = null;
@@ -86,14 +86,13 @@ async function fetchTokenMetrics() {
     console.log("Token metrics unavailable, keeping current values");
 	}
 
-  if (priceEl) priceEl.textContent = formatPrice(price);
-  if (marketCapEl && marketCap !== null) marketCapEl.textContent = formatCurrency(marketCap);
-  if (holdersEl && holders !== null) holdersEl.textContent = formatNumber(holders);
-  if (volumeEl && volume !== null) volumeEl.textContent = formatCurrency(volume);
+  if (priceEl) priceEl.textContent = price !== null ? formatPrice(price) : "—";
+  if (marketCapEl) marketCapEl.textContent = marketCap !== null ? formatCurrency(marketCap) : "—";
+  if (holdersEl) holdersEl.textContent = holders !== null ? formatNumber(holders) : "—";
+  if (volumeEl) volumeEl.textContent = volume !== null ? formatCurrency(volume) : "—";
 }
 
 fetchTokenMetrics();
-setInterval(fetchTokenMetrics, 60000);
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
