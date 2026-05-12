@@ -31,25 +31,7 @@ async function fetchTokenMetrics() {
 	try {
     const [dexResponse, holdersResponse] = await Promise.all([
       fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`),
-      fetch("https://api.mainnet-beta.solana.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "getProgramAccounts",
-          params: [
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-            {
-              encoding: "jsonParsed",
-              filters: [
-                { dataSize: 165 },
-                { memcmp: { offset: 0, bytes: TOKEN_ADDRESS } },
-              ],
-            },
-          ],
-        }),
-      }),
+      fetch("/.netlify/functions/holders"),
     ]);
 
     if (dexResponse.ok) {
@@ -68,19 +50,11 @@ async function fetchTokenMetrics() {
 
     if (holdersResponse.ok) {
       const holdersData = await holdersResponse.json();
-      const uniqueOwners = new Set();
+      const nextHolders = Number(holdersData.holders);
 
-      for (const account of holdersData.result || []) {
-        const parsed = account?.account?.data?.parsed?.info;
-        const owner = parsed?.owner;
-        const amount = Number(parsed?.tokenAmount?.uiAmount || 0);
-
-        if (owner && amount > 0) {
-          uniqueOwners.add(owner);
-        }
+      if (Number.isFinite(nextHolders) && nextHolders >= 0) {
+        holders = nextHolders;
       }
-
-      holders = uniqueOwners.size;
     }
 	} catch (error) {
     console.log("Token metrics unavailable, keeping current values");
@@ -93,6 +67,7 @@ async function fetchTokenMetrics() {
 }
 
 fetchTokenMetrics();
+setInterval(fetchTokenMetrics, 300000);
 
 const copyButton = document.getElementById("copyContractBtn");
 const contractAddress = document.getElementById("contractAddress");
